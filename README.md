@@ -36,7 +36,7 @@ Dibangun sebagai proyek portofolio Teknik Informatika dengan UI clean minimal mo
 ### 1. Clone / Download
 
 ```bash
-git clone https://github.com/username/dk-ai.git
+git clone https://github.com/DikaFauzi/dk-ai-assistant.git
 cd dk-ai
 ```
 
