@@ -60,13 +60,13 @@ Cukup buka file `index.html` langsung di browser — tidak perlu server.
 git init
 git add .
 git commit -m "init: DK AI chat app"
-git remote add origin https://github.com/username/dk-ai.git
+git remote add origin https://github.com/DikaFauzi/dk-ai-assistant.git
 git push -u origin main
 ```
 
 Kemudian aktifkan **GitHub Pages** di Settings repo → Pages → Source: `main / root`.
 
-URL akan tersedia di: `https://username.github.io/dk-ai`
+URL akan tersedia di: `https://DikaFauzi.github.io/dk-ai-assistant`
 
 ---
 
