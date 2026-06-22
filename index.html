@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DK AI — Smart Chat Assistant</title>
+  <meta name="description" content="DK AI adalah asisten chat berbasis AI untuk mahasiswa Teknik Informatika." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css" />
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-row">
+          <div class="logo-dot">
+            <i class="ti ti-sparkles" aria-hidden="true"></i>
+          </div>
+          <span class="logo-name">DK AI</span>
+        </div>
+        <button class="new-chat-btn" onclick="newChat()">
+          <i class="ti ti-plus" aria-hidden="true"></i>
+          New chat
+        </button>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="section-label">Recent</div>
+        <div class="chat-item active" id="item-0">
+          <i class="ti ti-message" aria-hidden="true"></i>
+          <span>New conversation</span>
+        </div>
+        <div class="chat-item" id="item-1" onclick="loadHistory(1)">
+          <i class="ti ti-message" aria-hidden="true"></i>
+          <span>Machine learning basics</span>
+        </div>
+        <div class="chat-item" id="item-2" onclick="loadHistory(2)">
+          <i class="ti ti-message" aria-hidden="true"></i>
+          <span>REST API design</span>
+        </div>
+        <div class="chat-item" id="item-3" onclick="loadHistory(3)">
+          <i class="ti ti-message" aria-hidden="true"></i>
+          <span>Python debugging help</span>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-row">
+          <div class="avatar">AD</div>
+          <div class="user-info">
+            <div class="user-name">Dika Dev</div>
+            <div class="user-role">Informatika · Portfolio</div>
+          </div>
+          <button class="icon-btn" title="Settings" onclick="openSettings()">
+            <i class="ti ti-settings" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CHAT -->
+    <main class="main">
+      <div class="chat-header">
+        <div>
+          <div class="chat-title" id="chat-title">New conversation</div>
+          <div class="chat-subtitle">DK AI · claude-sonnet-4-6 · Ready</div>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" title="Export chat" onclick="exportChat()">
+            <i class="ti ti-download" aria-hidden="true"></i>
+          </button>
+          <button class="icon-btn" title="Clear chat" onclick="newChat()">
+            <i class="ti ti-trash" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="messages-area" id="messages-area">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">
+            <i class="ti ti-sparkles" aria-hidden="true"></i>
+          </div>
+          <div class="empty-title">Halo! DK AI siap membantu</div>
+          <div class="empty-sub">Tanya apa saja seputar kuliah, coding, atau teknologi</div>
+          <div class="suggestion-chips">
+            <button class="chip" onclick="useSuggestion('Jelaskan apa itu machine learning')">Apa itu ML?</button>
+            <button class="chip" onclick="useSuggestion('Buatkan contoh REST API sederhana dengan Python Flask')">REST API Flask</button>
+            <button class="chip" onclick="useSuggestion('Perbedaan stack dan queue dalam struktur data')">Stack vs Queue</button>
+            <button class="chip" onclick="useSuggestion('Bagaimana cara kerja algoritma sorting bubble sort?')">Bubble Sort</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <div class="input-wrapper">
+          <textarea
+            id="chat-input"
+            rows="1"
+            placeholder="Ketik pesanmu... (Enter untuk kirim, Shift+Enter baris baru)"
+            onkeydown="handleKey(event)"
+            oninput="autoResize(this); updateCount()"
+          ></textarea>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()" aria-label="Kirim pesan">
+            <i class="ti ti-arrow-up" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="input-footer">
+          <div class="model-badge">
+            <span class="model-dot"></span>
+            DK AI · claude-sonnet-4-6
+          </div>
+          <span class="char-count" id="char-count">0 / 2000</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeSettings()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">Pengaturan</div>
+        <button class="icon-btn" onclick="closeSettings()">
+          <i class="ti ti-x" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label class="field-label">API Key (Anthropic)</label>
+        <input
+          type="password"
+          id="api-key-input"
+          class="field-input"
+          placeholder="sk-ant-api03-..."
+          autocomplete="off"
+        />
+        <p class="field-hint">
+          Dapatkan API key di
+          <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>.
+          Key disimpan hanya di browser kamu (localStorage).
+        </p>
+
+        <label class="field-label" style="margin-top:20px">Nama kamu</label>
+        <input
+          type="text"
+          id="user-name-input"
+          class="field-input"
+          placeholder="Nama kamu"
+          value="Dika Dev"
+        />
+
+        <label class="field-label" style="margin-top:20px">System prompt</label>
+        <textarea
+          id="system-prompt-input"
+          class="field-input field-textarea"
+          rows="4"
+        >Kamu adalah DK AI, asisten AI pintar untuk mahasiswa Teknik Informatika. Jawab dengan jelas, ringkas, dan gunakan bahasa Indonesia yang natural. Sertakan contoh kode bila relevan.</textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeSettings()">Batal</button>
+        <button class="btn-primary" onclick="saveSettings()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
